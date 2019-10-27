@@ -17,7 +17,7 @@ DeviceAddress thermometerAddress;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-double Kp=500, Ki=0.55, Kd=0.1;
+double Kp=500, Ki=5, Kd=0.8;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 const float  WindowSize = 5000.0;
@@ -44,6 +44,7 @@ bool validateBoil = false;
 bool validateMash = false;
 bool validateManual = false;
 bool validateHopstand = false;
+bool validateGrain = false;
 
 int stepCount = 1;
 int hopCount = 1;
@@ -246,26 +247,35 @@ void readyToBrew(){
     
     Setpoint = ammostamento[index].temp_step; //il setPoint è la temperature dello specifico step
     compute_Values();
-    
     printLCD_Mash(index);
     
-    if( (Input+1 >= Setpoint) && (index == 0)) { //se verifica comincia il countdown
-      tone(BUZZER_PIN, 2000, 3000);
-      while (index == 0){
-        lcd.setCursor(0,0);
-        lcd.print("Insert GRAINS   ");
-        lcd.setCursor(0,1);
-        lcd.print("Press OK to mash");
-        if(digitalRead(OK_PIN) == HIGH){
-          lcd.clear();
-          timer_Mash(ammostamento[index].time_step);
-          break;
+    while (index == 0){
+      Setpoint = ammostamento[index].temp_step; //il setPoint è la temperature dello specifico step
+      compute_Values();
+      printLCD_Mash(index);
+      if( (Input+1 >= Setpoint)) { //se verifica comincia il countdown
+        tone(BUZZER_PIN, 2000, 3000);
+        while (validateGrain == false){
+         lcd.setCursor(0,0);
+         lcd.print("Insert GRAINS   ");
+         lcd.setCursor(0,1);
+         lcd.print("Press OK to mash");
+            if(digitalRead(OK_PIN) == HIGH){
+               lcd.clear();
+               timer_Mash(ammostamento[index].time_step);
+               validateGrain = true;
         }
+    }
       }
+      index++;
     } 
-      if((Input+1 >= Setpoint) && (index!=0)){
-       timer_Mash(ammostamento[index].time_step);
-       index++;
+    while(index > 0){
+       Setpoint = ammostamento[index].temp_step; //il setPoint è la temperature dello specifico step
+       compute_Values();
+       printLCD_Mash(index);
+       if((Input+1 >= Setpoint)){
+        timer_Mash(ammostamento[index].time_step);
+        index++;
       }
     }
   
@@ -282,7 +292,7 @@ void readyToBrew(){
       }
     }
    }
-  
+  }
 }
 
 void compute_Values(){ //Questa funzione viene richaimata ogni volta che ho bisogno del PID
