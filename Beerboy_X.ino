@@ -17,7 +17,7 @@ DeviceAddress thermometerAddress;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-double Kp=500, Ki=5, Kd=0.8;
+double Kp=500, Ki=5.5, Kd=0.2;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 const float  WindowSize = 5000.0;
