@@ -17,7 +17,7 @@ DeviceAddress thermometerAddress;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-double Kp=500, Ki=5.5, Kd=0.2;
+double Kp=500, Ki=0.6, Kd=0.1;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 const float  WindowSize = 5000.0;
@@ -56,7 +56,7 @@ int stepTime = 30;
 int hopTime = 60;
 int arrayHopTime[10];
 int index = 0;
-double manualSetPoint = 60;
+double manualSetPoint = 72.5;
 
 
 struct mash{
