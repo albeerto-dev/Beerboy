@@ -1,3 +1,35 @@
+/*************************************************************
+*************************BEERBOY 2.0**************************
+**************************************************************
+*********************Brewing Automation***********************
+************************************************************** 
+Code realized on the Arduino Uno R3 (or equivalent)
+based on microprocessor ATmega328P.
+This code gives you the possibility to operate on a single
+Input -> single Output system to brew beer. It's perfect for 
+BIAB systems, but can be used also for classic
+AG just by swapping the plug of the heating 
+element of the mash kettle with the one of the boil kettle
+(you'll need also to move the temp probe in the boil kettle).
+
+                 Functionalities
+Two modality 
+----> AUTO
+----> MANUAL
+
+AUTO
+Everything is set before the start of the brewday. In sequence
+you can choose. : 1/number of mash steps 2/temperature and time 
+of each step of the mash 3/boil duration in minutes 4/number of
+hop jetty 5/time of each hop jetty 6/hopstand duration in minutes
+
+MANUAL
+It's a classic temperature PID controller. You can olny set the 
+temperature desired and change it whenever you want.
+****************************************************************/
+
+
+
 #include <LiquidCrystal.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
