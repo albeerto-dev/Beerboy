@@ -3,11 +3,11 @@
 #include <DallasTemperature.h>
 #include <PID_v1.h>
 
-//inizializzo la libreria associando i PIN allo schermo 
+//LCD 16X2 screen inizialized 
 const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-//INIZIALIZZO LA SONDA DI TEMPERATURA
+//Temperature probe inizialized
 #define TEMP_PIN 13
 OneWire oneWire(TEMP_PIN);
 DallasTemperature sensors(&oneWire);
@@ -20,18 +20,18 @@ double Setpoint, Input, Output;
 double Kp=500, Ki=0.6, Kd=0.1;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
-const float  WindowSize = 5000.0;
-unsigned long windowStartTime = 0;
-const bool RELAY_PIN_ACTIVE_LEVEL = LOW;
+const float  WindowSize = 5000.0; //window size usege to calculate Output
+unsigned long windowStartTime = 0; //support varible to calculate Output
+const bool RELAY_PIN_ACTIVE_LEVEL = LOW; //relay state to give power to the heating element
 
-//Inizializzo i PIN
+//PIN inizialized
 #define UP_PIN 6
 #define DOWN_PIN 7
 #define OK_PIN 8
 #define SSR_PIN 9
 #define BUZZER_PIN 10
 
-
+//Support varibles for while cicles
 bool mode = false;
 bool chosen = false;
 bool confirm = false;
@@ -46,6 +46,7 @@ bool validateManual = false;
 bool validateHopstand = false;
 bool validateGrain = false;
 
+//Variables used for every step of the brew
 int stepCount = 1;
 int hopCount = 1;
 int boilCount = 60;
@@ -56,8 +57,7 @@ int stepTime = 30;
 int hopTime = 60;
 int arrayHopTime[10];
 int index = 0;
-double manualSetPoint = 72.5;
-
+double manualSetPoint = 60;
 
 struct mash{
   int time_step;
@@ -66,7 +66,7 @@ struct mash{
 
 
 void setup() {
-   //Inizializzo i pin e la prima accensione 
+   //Pin and first start
   Serial.begin(115200);
 
   pinMode(TEMP_PIN, INPUT);
@@ -75,61 +75,68 @@ void setup() {
   pinMode(DOWN_PIN, INPUT);
   pinMode(OK_PIN, INPUT);
   
+  //probe inizialization
   sensors.begin();
   sensors.getAddress(thermometerAddress,0);
   sensors.requestTemperatures();
   sensors.setResolution(thermometerAddress,12);
 
+  //PID inizialization
   myPID.SetOutputLimits(0, WindowSize);
   myPID.SetMode(AUTOMATIC);
   myPID.SetSampleTime(1000);
 
-   
+  //LCD inizialization 
   lcd.begin(16,2);
   lcd.print("BEERBOY      2.0");
   lcd.setCursor(0,1);
   lcd.print(" by A. Ramagini");
   //tone(BUZZER_PIN, 2000,5000);
-  delay(2000);
-  
+  delay(3000);
 }
 
+//Loop execution 
 void loop() {
   
   lcd.clear();
-
-  selectMode();
-  lcd.noCursor();
- 
-  if( mode == false){
-    automatic();
-    stepMash();
-    setMash();
-    boilTime();
-    hopGetty();
-    getty();
-    whirlpoolTime();
-    start();
-    readyToBrew();
-    boilFase();
-    whirlpoolFase();
+  selectMode(); //first step : selcet the mode >AUTO or >MANUAL
+   
+  if( mode == false){ //AUTO MODE
+    automatic(); //dispaly info
+    stepMash(); //N. steps of the mash
+    setMash(); //temperature and time of every step of the mash
+    boilTime(); //boil duration in minutes
+    hopJetty(); //N. of hop getty during the boil
+    jetty(); //time of every getty during boil
+    whirlpoolTime(); //hopstand duration in minutes
+    start(); 
+    readyToBrew(); //mash 
+    boilFase(); //boil 
+    whirlpoolFase(); //hopstand
   }
-    if(mode == true){
+    if(mode == true){ //MANUAL MODE
     manual();
     start();
-    printLCD_ManualMode();
+    printLCD_ManualMode(); //PID mode without time
     }
 }
 
+/*This is the most complex function. It calculates both the time and the PID
+ values to have the correct Output. Every seconds the PID values are 
+ calculated and the delay to calculate and display each second is only 
+ 250ms beacause after a deep analysis i can say that the compute_Values() 
+ function has a duration of 750ms circa. In a 1 hour test the timer lost
+ only 1 sec. For our purpose it's ok.
+ */ 
 int timer_Mash(int tempo){
   lcd.setCursor(11,1);
   int minutes = tempo-1;
-  unsigned long tempoTrascorso = 0;
-  unsigned long tempoDifferenza = 0;
-  unsigned long tempoNuovo = 0;
+  //unsigned long tempoTrascorso = 0;
+  //unsigned long tempoDifferenza = 0;
+  //unsigned long tempoNuovo = 0;
   int tempoAppoggio;
   int scostamento = 0;
-  Serial.println("MASH");
+  //Serial.println("MASH");
   while (minutes >= 0){
     int seconds = 59;
     if (minutes>=10){
@@ -146,11 +153,11 @@ int timer_Mash(int tempo){
     lcd.print(":");
       for(seconds; seconds >= 0; seconds--){
         
-        tempoTrascorso = millis();
+        //tempoTrascorso = millis();
         compute_Values();
-        tempoDifferenza = tempoTrascorso - tempoNuovo;
-        tempoNuovo = tempoTrascorso;
-        scostamento = 1000 - tempoDifferenza;
+        //tempoDifferenza = tempoTrascorso - tempoNuovo;
+        //tempoNuovo = tempoTrascorso;
+        //scostamento = 1000 - tempoDifferenza;
         if(seconds>=10){
           lcd.setCursor(14,1);
           lcd.print(seconds);
@@ -165,12 +172,13 @@ int timer_Mash(int tempo){
           delay(250);
          
     }   
-    printLCD_Mash(index);
+    printLCD_Mash(index); //the display function is called to print on the LCD
   }
   minutes--; 
 }
 }
 
+//Display the manual mode values on the display and calcute the PID values
 void printLCD_ManualMode(){
     
     while (validateManual == false){
@@ -188,7 +196,7 @@ void printLCD_ManualMode(){
     lcd.print("MANUAL");
     lcd.setCursor(12,1);
     lcd.print("MODE");
-    if(digitalRead(OK_PIN) == HIGH){
+    if(digitalRead(OK_PIN) == HIGH){ //press OK and set a new Setpoint
        validateManual = true;
     }
     }
@@ -206,7 +214,7 @@ void printLCD_ManualMode(){
       lcd.print("   SET");
       lcd.setCursor(12,1);
       lcd.print("TEMP");
-      if(digitalRead(OK_PIN) == HIGH){
+      if(digitalRead(OK_PIN) == HIGH){ //press OK and confirm the new Setpoint
        validateManual = false;
     }
       
@@ -214,6 +222,7 @@ void printLCD_ManualMode(){
   
 }
 
+//the mash values are printed on th LCD 
 int printLCD_Mash(int indice){
     lcd.setCursor(0,0);
     lcd.print("SV:");
@@ -231,13 +240,18 @@ int printLCD_Mash(int indice){
     lcd.print("T:");
     lcd.setCursor(8,1);
     lcd.print(" ");
+    /*
     Serial.print("Input : ");
     Serial.print(Input);
     Serial.print("  Setpoint : ");
     Serial.println(Setpoint);
+    */
 }
 
-
+/*This function manages the AUTOMATIC MASH. Stepping form a step to another when 
+ the setted duration is over. It is completely automatic and every step and temperature
+ are respected based on the values setted before.
+ */
 void readyToBrew(){
   lcd.clear();
   
@@ -245,22 +259,22 @@ void readyToBrew(){
   
   while( index < stepCount ){  
     
-    Setpoint = ammostamento[index].temp_step; //il setPoint è la temperature dello specifico step
+    Setpoint = ammostamento[index].temp_step; //Setpoint of the specific step
     compute_Values();
     printLCD_Mash(index);
     
     while (index == 0){
-      Setpoint = ammostamento[index].temp_step; //il setPoint è la temperature dello specifico step
+      Setpoint = ammostamento[index].temp_step; //Setpoint of the specific step
       compute_Values();
       printLCD_Mash(index);
-      if( (Input+1 >= Setpoint)) { //se verifica comincia il countdown
+      if( (Input+1 >= Setpoint)) { //if the Input is near to setpoint insert grains
         tone(BUZZER_PIN, 2000, 3000);
         while (validateGrain == false){
          lcd.setCursor(0,0);
          lcd.print("Insert GRAINS   ");
          lcd.setCursor(0,1);
          lcd.print("Press OK to mash");
-            if(digitalRead(OK_PIN) == HIGH){
+            if(digitalRead(OK_PIN) == HIGH){ //after grains IN press ok to star MASH
                lcd.clear();
                timer_Mash(ammostamento[index].time_step);
                validateGrain = true;
@@ -269,17 +283,17 @@ void readyToBrew(){
       }
       index++;
     } 
-    while(index > 0){
-       Setpoint = ammostamento[index].temp_step; //il setPoint è la temperature dello specifico step
+    while(index > 0){ //after the first step this cicle start
+       Setpoint = ammostamento[index].temp_step; //Setpoint of the specific step
        compute_Values();
        printLCD_Mash(index);
-       if((Input+1 >= Setpoint)){
+       if((Input+1 >= Setpoint)){ //if the Input is near to setpoint insert grains
         timer_Mash(ammostamento[index].time_step);
         index++;
       }
     }
   
-    if( index == stepCount){
+    if( index == stepCount){ //mash is over if BIAB remove grainbag. If AG start sparge
       while(validateMash == false ){
       Setpoint = ammostamento[index-1].temp_step;
       compute_Values();
@@ -287,7 +301,7 @@ void readyToBrew(){
       lcd.print("Mash is OVER    ");
       lcd.setCursor(0,1);
       lcd.print("Press OK to boil");
-      if(digitalRead(OK_PIN) == HIGH){
+      if(digitalRead(OK_PIN) == HIGH){ //press after sparge to start the boil fase
         validateMash = true;
       }
     }
@@ -295,13 +309,15 @@ void readyToBrew(){
   }
 }
 
-void compute_Values(){ //Questa funzione viene richaimata ogni volta che ho bisogno del PID
+//PID values are calculuted by this function
+void compute_Values(){ 
   
   unsigned long currentTime = millis();
-  sensors.requestTemperatures();
-  Input = sensors.getTempC(thermometerAddress);
   
-  myPID.Compute();
+  sensors.requestTemperatures();
+  Input = sensors.getTempC(thermometerAddress); //Input is the probe temperature
+  
+  myPID.Compute(); //compute by the library
   
   if (currentTime - windowStartTime > WindowSize)
   {
@@ -321,6 +337,7 @@ void compute_Values(){ //Questa funzione viene richaimata ogni volta che ho biso
   const unsigned long updateInterval = 10000;
   static unsigned long updateTimer = 0;
  
+ //Very useful to fix the KP, KI, KD values and have the correct Output
   if (currentTime - updateTimer <= updateInterval)
   {
     updateTimer += updateInterval;
@@ -346,35 +363,40 @@ void compute_Values(){ //Questa funzione viene richaimata ogni volta che ho biso
     */
 }
 
+//It's called when the mash is over 
 void boilFase(){
   lcd.clear();
   sensors.requestTemperatures();
   double actual_T = sensors.getTempC(thermometerAddress);
   
-  while(validateBoil == false){
+  while(validateBoil == false){ //heat to boil
+    
     digitalWrite(SSR_PIN, HIGH);
+    
     sensors.requestTemperatures();
     double actual_T = sensors.getTempC(thermometerAddress);
+    
     lcd.setCursor(0,0);
     lcd.print("Stepping to boil");
     lcd.setCursor(0,1);
     lcd.print("Temp:");
     lcd.setCursor(5,1);
     lcd.print(actual_T);
-    while(actual_T > 96){
+    
+    while(actual_T > 96){ //boil is near press OK to start the countdown
       lcd.setCursor(0,0);
       lcd.print("OK to start BOIL");
       tone(BUZZER_PIN,5000, 5000);
-       if(digitalRead(OK_PIN) == HIGH){
+       if(digitalRead(OK_PIN) == HIGH){ //countdown 
          validateBoil = true;
          break;
       }
     }
- 
-}
+  }
   timerBoil();
 }
 
+/*First function to be called. It's a simple selection of the mode */
 void selectMode(){
   lcd.clear();
   lcd.print(" Mode selection");
@@ -404,6 +426,7 @@ void selectMode(){
   }
 }
 
+//automatic mode on LCD
 void automatic(){
   lcd.clear();
   lcd.print("AUTOMATIC MODE");
@@ -412,7 +435,7 @@ void automatic(){
   delay(2000);
 }
 
-
+//manual mode on LCD
 void manual(){
   lcd.clear();
   lcd.print("MANUAL MODE ");
@@ -422,6 +445,8 @@ void manual(){
   lcd.clear();
 }
 
+//select how many step of the mash and print on LCD
+//Press OK to confirm
 void stepMash(){
   while( mash == false){
   lcd.clear();
@@ -440,6 +465,9 @@ void stepMash(){
   
 }
 
+//Set the step of the mash based on stepMash()
+//Each step has a temperature and a time
+//Press OK to confirm temperature and time
 void setMash(){
   lcd.clear();
   int i = 0;
@@ -484,10 +512,11 @@ void setMash(){
 }
 }
 
-void hopGetty(){
+//Counts how many hop jetty during boil fase
+void hopJetty(){
   while( hop == false){
   lcd.clear();
-  lcd.print("N# Hop getty:");
+  lcd.print("N# Hop jetty:");
   lcd.setCursor(14,0);
   lcd.print(hopCount);
   hopUp();
@@ -725,13 +754,13 @@ void stepTime_Down(){
   delay(50); 
 }
 
-void getty(){
+void jetty(){
   lcd.clear();
   int i = 1; 
   
   while(i <= hopCount){
     lcd.clear();
-    lcd.print("Getty #N");
+    lcd.print("Jetty #N");
     lcd.setCursor(8,0);
     lcd.print(i);
     lcd.setCursor(0,1);
