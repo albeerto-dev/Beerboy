@@ -1,6 +1,6 @@
 # Beerboy 2.0  - *Automation for homebrewing*
 
-Beerboy is an `Arduino` based brewing controller for every homebrewer.
+Beerboy is an `Arduino` based brewing controller for homebrewers.
 
 ### Functionalities
 
