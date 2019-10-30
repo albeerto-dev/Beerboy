@@ -35,5 +35,8 @@ temperature desired and change it whenever you want.
 * Button x 3
 * Display LCD 16x2 x 1
 * Wires
+* Resistor x 
+* Green Led x 1
+
 ### About
 Beerboy 2.0 is a brew controller developed by `Alberto M. Ramagini`.
