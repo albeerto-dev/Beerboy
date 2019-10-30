@@ -15,9 +15,9 @@ It can be used in two `modes`:
 * __AUTO__
 * __MANUAL__
 ### AUTO
-Everything is set before the start of the brewday. The mash temperature is controled by 
-a `PID algorithm` sequence
-You can set up : 
+Everything is set before the start of the brewday. The mash temperature is controlled by 
+a `PID algorithm`.
+In sequence you can set up : 
 1. Number of mash steps 
 2. Temperature and time in minutes of each step of the mash 
 3. Boil duration in minutes 
