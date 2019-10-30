@@ -1,22 +1,21 @@
-/*************************************************************
-*************************BEERBOY 2.0**************************
-**************************************************************
-*********************Brewing Automation***********************
-**************************************************************
-*******************by Alberto M. Ramagini*********************
-**************************************************************
-Code realized on the Arduino Uno R3 (or equivalent)
-based on microprocessor ATmega328P.
+/***************************************************************
+**************************BEERBOY 2.0***************************
+****************************************************************
+**********************Brewing Automation************************
+****************************************************************
+********************by Alberto M. Ramagini**********************
+****************************************************************
+Code realized on the Arduino Uno R3 (or equivalent) based on 
+microprocessor ATmega328P.
 This code gives you the possibility to operate on a single
 Input -> single Output system to brew beer. It's perfect for 
-BIAB systems, but can be used also for classic
-AG just by swapping the plug of the heating 
-element of the mash kettle with the one of the boil kettle
-(you'll need also to move the temp probe in the boil kettle).
+BIAB systems, but can be used also for classic AG just by 
+swapping the plug of the heating element of the mash kettle 
+with the one of the boil kettle (you'll need also to move the
+temp probe in the boil kettle).
 
-                 Functionalities
-Two modality 
-----> AUTO
+Functionalities : Two modes
+----> AUTO                                        
 ----> MANUAL
 
 AUTO
