@@ -28,7 +28,6 @@ In sequence you can set up :
 #### MANUAL
 It's like a classic temperature `PID controller`. You can olny set the 
 temperature desired and change it whenever you want.
-### *WORK IN PROGRESS*
 ### Hardware components
 * Arduino Uno R3 (or equivalent) x 1
 * Buzzer x 1
@@ -40,8 +39,8 @@ temperature desired and change it whenever you want.
 * Green Led x 1
 
 ## Video demonstration
-
+work in progress
 ## Wiring Instructions
-
+work in progress
 ### About
 Beerboy 2.0 is a brewing controller developed by `Alberto M. Ramagini`.
