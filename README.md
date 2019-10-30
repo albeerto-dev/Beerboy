@@ -42,5 +42,5 @@ temperature desired and change it whenever you want.
 work in progress
 ## Wiring Instructions
 work in progress
-### About
+## About
 Beerboy 2.0 is a brewing controller developed by `Alberto M. Ramagini`.
