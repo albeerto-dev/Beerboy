@@ -28,7 +28,7 @@ You can set up :
 ### MANUAL
 It's a classic temperature PID controller. You can olny set the 
 temperature desired and change it whenever you want.
-### *WORK IN PROGERSS*
+### *WORK IN PROGRESS*
 ....
 ### About
 Beerboy 2.0 is a brew controller developed by Alberto M. Ramagini
