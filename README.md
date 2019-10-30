@@ -31,11 +31,12 @@ temperature desired and change it whenever you want.
 ### *WORK IN PROGRESS*
 ### Hardware components
 * Arduino Uno R3 (or equivalent) x 1
-* Buzzzer x 1
+* Buzzer x 1
 * Button x 3
 * Display LCD 16x2 x 1
 * Wires
-* Resistor x 
+* Resistor YYYY Ohm x 
+* Resistor GGGG Ohm x 
 * Green Led x 1
 
 ### About
