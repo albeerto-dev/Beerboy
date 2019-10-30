@@ -2,7 +2,7 @@
 
 Beerboy is an `Arduino` based brewing controller for homebrewers.
 
-### Functionalities
+## Functionalities
 
 It's for a single Input / single Output system.  It's perfect for 
 BIAB systems. "Beerboy 2.0" can be used also for classic ALL GRAIN just by 
@@ -14,7 +14,7 @@ this controller can't manage it.
 It can be used in two `modes`:
 * __AUTO__
 * __MANUAL__
-### AUTO
+#### AUTO
 Everything is set before the start of the brewday. The mash temperature is controlled by 
 a `PID algorithm`.
 In sequence you can set up : 
@@ -25,7 +25,7 @@ In sequence you can set up :
 5. Time of each hop jetty 
 6. Hopstand duration in minutes.
 
-### MANUAL
+#### MANUAL
 It's like a classic temperature `PID controller`. You can olny set the 
 temperature desired and change it whenever you want.
 ### *WORK IN PROGRESS*
