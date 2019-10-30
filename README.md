@@ -26,7 +26,7 @@ In sequence you can set up :
 6. Hopstand duration in minutes.
 
 ### MANUAL
-It's a classic temperature `PID controller`. You can olny set the 
+It's like a classic temperature `PID controller`. You can olny set the 
 temperature desired and change it whenever you want.
 ### *WORK IN PROGRESS*
 ### Hardware components
