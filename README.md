@@ -40,4 +40,4 @@ temperature desired and change it whenever you want.
 * Green Led x 1
 
 ### About
-Beerboy 2.0 is a brew controller developed by `Alberto M. Ramagini`.
+Beerboy 2.0 is a brewing controller developed by `Alberto M. Ramagini`.
