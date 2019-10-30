@@ -20,13 +20,15 @@ Functionalities : Two modes
 
 AUTO
 Everything is set before the start of the brewday. In sequence
-you can choose. : 1/number of mash steps 2/temperature and time 
-of each step of the mash 3/boil duration in minutes 4/number of
-hop jetty 5/time of each hop jetty 6/hopstand duration in minutes
+you can choose. : 1/number of mash steps 2/temperature and time
+in minutes of each step of the mash 3/boil duration in minutes 
+4/number of hop jetty 5/time of each hop jetty 6/hopstand 
+duration in minutes.
 
 MANUAL
 It's a classic temperature PID controller. You can olny set the 
 temperature desired and change it whenever you want.
+****************************************************************
 ****************************************************************/
 
 
@@ -50,7 +52,7 @@ DeviceAddress thermometerAddress;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-double Kp=500, Ki=0.6, Kd=0.1;
+double Kp=1, Ki=0, Kd=0;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 const float  WindowSize = 5000.0; //window size usege to calculate Output
