@@ -1,6 +1,6 @@
 # Beerboy 2.0  - *Automation for homebrewing*
 
-Beerboy is an Arduino brewing controller for every homebrewer.
+Beerboy is an `Arduino` brewing controller for every homebrewer.
 
 ### Functionalities
 
@@ -26,9 +26,9 @@ You can set up :
 6. Hopstand duration in minutes.
 
 ### MANUAL
-It's a classic temperature PID controller. You can olny set the 
+It's a classic temperature `PID controller`. You can olny set the 
 temperature desired and change it whenever you want.
 ### *WORK IN PROGRESS*
 ....
 ### About
-Beerboy 2.0 is a brew controller developed by Alberto M. Ramagini
+Beerboy 2.0 is a brew controller developed by `Alberto M. Ramagini`.
