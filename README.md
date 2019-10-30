@@ -1,10 +1,10 @@
 # Beerboy 2.0  - *Automation for homebrewing*
 
-Beerboy is an `Arduino` brewing controller for every homebrewer.
+Beerboy is an `Arduino` based brewing controller for every homebrewer.
 
 ### Functionalities
 
-It's a single Input / single Output system.  It's perfect for 
+It's for a single Input / single Output system.  It's perfect for 
 BIAB systems. "Beerboy 2.0" can be used also for classic ALL GRAIN just by 
 swapping the plug of the heating element of the mash kettle 
 with the one of the boil kettle (you'll also need to move the
