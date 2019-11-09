@@ -1,9 +1,12 @@
 /***************************************************************
-**************************BEERBOY 2.0***************************
+**************************BEERBOY*******************************
 ****************************************************************
+***************************V 1.0********************************
 **********************Brewing Automation************************
 ****************************************************************
 ********************by Alberto M. Ramagini**********************
+****************************************************************
+*https://github.com/albeerto-dev/Beerboy
 ****************************************************************
 Code realized on the Arduino Uno R3 (or equivalent) based on 
 microprocessor ATmega328P.
@@ -60,11 +63,11 @@ unsigned long windowStartTime = 0; //support varible to calculate Output
 const bool RELAY_PIN_ACTIVE_LEVEL = LOW; //relay state to give power to the heating element
 
 //PIN inizialized
-#define UP_PIN 6
-#define DOWN_PIN 7
 #define OK_PIN 8
-#define SSR_PIN 9
-#define BUZZER_PIN 10
+#define UP_PIN 9
+#define DOWN_PIN 10
+#define SSR_PIN 6
+#define BUZZER_PIN 7
 
 //Support varibles for while cicles
 bool mode = false;
