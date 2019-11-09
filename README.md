@@ -51,11 +51,11 @@ Fill up the mash tun with the same liters of water usually used for the brew. Se
  4. Repeat steps 2 and 3 until increasing the D gain does not stop the oscillations.
  5. Set P and D to the last stable values.
  6. Increase the I gain until it brings you to the setpoint with the number of oscillations desired (normally zero but a quicker response can be had if you don't mind a couple oscillations of overshoot)
-## Video demonstration
-work in progress
 ## Wiring instructions
 That's the precise scheme. AC Input should be your main plug. AC Output should be your heating element.
 ![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy%20scheme.png)
+## Video demonstration
+work in progress / coming soon
 ## Version
 V 1.0
 ## About
