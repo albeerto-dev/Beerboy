@@ -1,6 +1,7 @@
 # Beerboy - *Automation for homebrewing* 
 Beerboy is an `Arduino` based brewing controller for homebrewers.
-![image logo](https://github.com/albeerto-dev/Beerboy/blob/master/Logo_small.png)
+<img src= "https://github.com/albeerto-dev/Beerboy/blob/master/Logo_small.png" align="right" />
+
 
 ## Functionalities
 
