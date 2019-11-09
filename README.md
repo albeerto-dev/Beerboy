@@ -1,6 +1,6 @@
 # Beerboy - *Automation for homebrewing* 
-Beerboy is an `Arduino` based brewing controller for homebrewers. | ![image logo](https://github.com/albeerto-dev/Beerboy/blob/master/Logo_small.png)
-
+Beerboy is an `Arduino` based brewing controller for homebrewers.
+![image logo](https://github.com/albeerto-dev/Beerboy/blob/master/Logo_small.png)
 
 ## Functionalities
 
@@ -41,7 +41,15 @@ temperature desired and change it whenever you want.
 * Resistor 100 Ohm x 1 [buzzer]
 * Resistor 4.700 Ohm x 1 [DS18B20]
 * SSR 25A / 40A x 1
-
+## Tuning parameters
+Before the first brew with this controller it's necessary to tune the 3 parameters of the `PID controller : KI , KD, KP`
+Fill up the mash tun with the same liters of water usually used for the brew. Select MANUAL MODE on the controller and while the arduino board is connected to your PC and the Serial monitor is opend set new tuning parameters based on this guide : 
+ 1. Set all gains to zero.
+ 2. Increase the P gain until the response to a disturbance is steady oscillation.
+ 3. Increase the D gain until the the oscillations go away (i.e. it's critically damped).
+ 4. Repeat steps 2 and 3 until increasing the D gain does not stop the oscillations.
+ 5. Set P and D to the last stable values.
+ 6. Increase the I gain until it brings you to the setpoint with the number of oscillations desired (normally zero but a quicker response can be had if you don't mind a couple oscillations of overshoot)
 ## Video demonstration
 work in progress
 ## Wiring instructions
