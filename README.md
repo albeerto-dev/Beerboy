@@ -6,7 +6,7 @@ Beerboy is an `Arduino` based open source brewing controller for homebrewers.
 ## Functionalities
 
 It's for a single Input / single Output system.  It's perfect for 
-BIAB systems. "Beerboy 2.0" can be used also for classic ALL GRAIN just by 
+BIAB systems. "Beerboy" can be used also for classic ALL GRAIN just by 
 swapping the plug of the heating element of the mash kettle 
 with the one of the boil kettle (you'll also need to move the
 temp probe in the boil kettle). If your AG system has a sparge kettle/pot 
