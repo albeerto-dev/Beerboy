@@ -42,9 +42,7 @@ temperature desired and change it whenever you want.
 ## Video demonstration
 work in progress
 ## Wiring instructions
-work in progress
-![Image of wiring] 
-(https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy%20scheme.png)
+![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy%20scheme.png)
 ## Version
 V 1.0
 ## About
