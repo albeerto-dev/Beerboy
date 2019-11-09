@@ -126,9 +126,14 @@ void setup() {
 
   //LCD inizialization 
   lcd.begin(16,2);
-  lcd.print("BEERBOY      2.0");
+  lcd.print("   BEERBOY   ");
   lcd.setCursor(0,1);
   lcd.print(" by A. Ramagini");
+  delay(3000);
+  lcd.clear();
+  lcd.print("   Version  ");
+  lcd.setCursor(0,1);
+  lcd.print("   1.0");
   //tone(BUZZER_PIN, 2000,5000);
   delay(3000);
 }
