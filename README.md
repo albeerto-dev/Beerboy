@@ -38,10 +38,12 @@ temperature desired and change it whenever you want.
 * Resistor 220 Ohm x 1
 * Resistor 100 Ohm x 1
 * Resistor 4.700 Ohm x 1
+* SSR 25A / 40A x 1
 
 ## Video demonstration
 work in progress
 ## Wiring instructions
+That's the precise scheme. AC Input should be your main plug. AC Output should be your heating element.
 ![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy%20scheme.png)
 ## Version
 V 1.0
