@@ -59,4 +59,4 @@ work in progress / coming soon
 ## Version
 V 1.0
 ## About
-Beerboy 2.0 is a brewing controller developed by `Alberto M. Ramagini`.
+`Beerboy` is a brewing controller developed by `Alberto M. Ramagini`.
