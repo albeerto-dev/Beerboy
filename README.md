@@ -1,4 +1,4 @@
-# Beerboy 2.0  - *Automation for homebrewing*
+# Beerboy - *Automation for homebrewing*
 
 Beerboy is an `Arduino` based brewing controller for homebrewers.
 
@@ -34,13 +34,16 @@ temperature desired and change it whenever you want.
 * Button x 3
 * Display LCD 16x2 x 1
 * Wires
-* Resistor YYYY Ohm x 
-* Resistor GGGG Ohm x 
-* Green Led x 1
+* Resistor 10.000 Ohm x 3
+* Resistor 220 Ohm x 1
+* Resistor 100 Ohm x 1
+* Resistor 4.700 Ohm x 1
 
 ## Video demonstration
 work in progress
 ## Wiring instructions
 work in progress
+## Version
+V 1.0
 ## About
 Beerboy 2.0 is a brewing controller developed by `Alberto M. Ramagini`.
