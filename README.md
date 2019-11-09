@@ -33,11 +33,13 @@ temperature desired and change it whenever you want.
 * Buzzer x 1
 * Button x 3
 * Display LCD 16x2 x 1
+* Temperature probe DS18B20 x 1
 * Wires
-* Resistor 10.000 Ohm x 3
-* Resistor 220 Ohm x 1
-* Resistor 100 Ohm x 1
-* Resistor 4.700 Ohm x 1
+* Resistor 10.000 Ohm x 3 [buttons]
+* Resistor 2.000 Ohm x 1 [LCD frontlight]
+* Resistor 220 Ohm x 1 [LCD backlight]
+* Resistor 100 Ohm x 1 [buzzer]
+* Resistor 4.700 Ohm x 1 [DS18B20]
 * SSR 25A / 40A x 1
 
 ## Video demonstration
