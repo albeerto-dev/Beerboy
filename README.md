@@ -53,7 +53,7 @@ Fill up the mash tun with the same liters of water usually used for the brew. Se
  6. Increase the I gain until it brings you to the setpoint with the number of oscillations desired (normally zero but a quicker response can be had if you don't mind a couple oscillations of overshoot)
 ## Wiring instructions
 That's the precise scheme. AC Input should be your main plug. AC Output should be your heating element.
-![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy%20scheme.png)
+![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy_Scheme.png)
 ## Video demonstration
 work in progress / coming soon
 ## Version
