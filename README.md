@@ -29,7 +29,7 @@ In sequence you can set up :
 #### MANUAL
 It's like a classic temperature `PID controller`. You can olny set the 
 temperature desired and change it whenever you want.
-### Hardware components
+## Hardware components
 * Arduino Uno R3 (or equivalent) x 1
 * Buzzer x 1
 * Button x 3
