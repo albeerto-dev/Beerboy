@@ -56,6 +56,11 @@ double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
 double Kp=1, Ki=0, Kd=0;
+//Set to "1" if you use IMMERSION CHILLER
+//Set to "0" if others
+bool immersionChiller = 1;
+//Values to change finished
+
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 const float  WindowSize = 5000.0; //window size usege to calculate Output
@@ -76,7 +81,7 @@ bool confirm = false;
 bool hop = false;
 bool mash = false;
 bool boil = false;
-bool whirlpool = false;
+bool hopstand = false;
 bool stepOk = false;
 bool validateBoil = false;
 bool validateMash = false;
@@ -88,7 +93,7 @@ bool validateGrain = false;
 int stepCount = 1;
 int hopCount = 1;
 int boilCount = 60;
-int whirlpoolCount = 0;
+int hopstandCount = 0;
 int tempM = 0;
 double stepTemperature = 60;
 int stepTime = 30;
@@ -126,16 +131,16 @@ void setup() {
 
   //LCD inizialization 
   lcd.begin(16,2);
-  lcd.print("   BEERBOY   ");
+  lcd.print("    BEERBOY");
   lcd.setCursor(0,1);
   lcd.print(" by A. Ramagini");
-  delay(3000);
+  delay(4000);
   lcd.clear();
-  lcd.print("   Version  ");
-  lcd.setCursor(0,1);
-  lcd.print("   1.0");
+  lcd.print("     Version ");
+  lcd.setCursor(7,1);
+  lcd.print("1.0");
   //tone(BUZZER_PIN, 2000,5000);
-  delay(3000);
+  delay(2000);
 }
 
 //Loop execution 
@@ -151,11 +156,11 @@ void loop() {
     boilTime(); //boil duration in minutes
     hopJetty(); //N. of hop getty during the boil
     jetty(); //time of every getty during boil
-    whirlpoolTime(); //hopstand duration in minutes
+    hopstandTime(); //hopstand duration in minutes
     start(); 
     readyToBrew(); //mash 
     boilFase(); //boil 
-    whirlpoolFase(); //hopstand
+    hopstandFase(); //hopstand
   }
     if(mode == true){ //MANUAL MODE
     manual();
@@ -245,8 +250,8 @@ void printLCD_ManualMode(){
     }
     delay(2000);
     while (validateManual == true){
-      tempM_Up();
-      tempM_Down();
+      manualSetPoint = constrain(manualSetPoint, 0, 100);
+      tempMChange();
       lcd.setCursor(0,0);
       lcd.print("SV:");
       lcd.setCursor(3,0);
@@ -297,16 +302,13 @@ int printLCD_Mash(int indice){
  */
 void readyToBrew(){
   lcd.clear();
-  
+
+  Setpoint = ammostamento[index].temp_step;
   compute_Values();
   
   while( index < stepCount ){  
     
-    Setpoint = ammostamento[index].temp_step; //Setpoint of the specific step
-    compute_Values();
-    printLCD_Mash(index);
-    
-    while (index == 0){
+    if (index == 0){
       Setpoint = ammostamento[index].temp_step; //Setpoint of the specific step
       compute_Values();
       printLCD_Mash(index);
@@ -321,36 +323,32 @@ void readyToBrew(){
                lcd.clear();
                timer_Mash(ammostamento[index].time_step);
                validateGrain = true;
+               index++;
+          }
         }
-    }
       }
-      index++;
     } 
-    while(index > 0){ //after the first step this cicle start
-       Setpoint = ammostamento[index].temp_step; //Setpoint of the specific step
-       compute_Values();
-       printLCD_Mash(index);
-       if((Input+1 >= Setpoint)){ //if the Input is near to setpoint insert grains
+    if( (Input+1 >= Setpoint)) { //if the Input is near to setpoint alarm and start count
+        tone(BUZZER_PIN, 2000, 3000);
         timer_Mash(ammostamento[index].time_step);
         index++;
-      }
     }
-  
-    if( index == stepCount){ //mash is over if BIAB remove grainbag. If AG start sparge
-      while(validateMash == false ){
-      Setpoint = ammostamento[index-1].temp_step;
-      compute_Values();
-      lcd.setCursor(0,0);
-      lcd.print("Mash is OVER    ");
-      lcd.setCursor(0,1);
-      lcd.print("Press OK to boil");
-      if(digitalRead(OK_PIN) == HIGH){ //press after sparge to start the boil fase
-        validateMash = true;
+      if( index == stepCount){//mash is over if BIAB remove grainbag. If AG start sparge
+        while(validateMash == false ){
+          Setpoint = ammostamento[index-1].temp_step;
+          compute_Values();
+          lcd.setCursor(0,0);
+          lcd.print("Mash is OVER    ");
+          lcd.setCursor(0,1);
+          lcd.print("Press OK to boil");
+            if(digitalRead(OK_PIN) == HIGH){ //press after sparge to start the boil fase
+              validateMash = true;
+            }
+        }
       }
-    }
    }
-  }
 }
+
 
 //PID values are calculuted by this function
 void compute_Values(){ 
@@ -444,22 +442,30 @@ void boilFase(){
 void selectMode(){
   lcd.clear();
   lcd.print(" Mode selection");
+  lcd.setCursor(1,1);
+  lcd.print("AUTO");
+  lcd.setCursor(10,1);
+  lcd.print("MANUAL");
   while (confirm == false){
   if(mode == false){
 
       lcd.setCursor(0,1);
-      lcd.print("     AUTO  ");
+      lcd.print(">");
+      lcd.setCursor(9,1);
+      lcd.print(" ");
       if((digitalRead(UP_PIN) == HIGH || digitalRead(DOWN_PIN) == HIGH) && mode == false){
         mode = true;
-        delay(50);
+        delay(200);
       }
   }
   if(mode == true){
+    lcd.setCursor(9,1);
+    lcd.print(">");
     lcd.setCursor(0,1);
-    lcd.print("     MANUAL");
+    lcd.print(" ");
     if((digitalRead(UP_PIN) == HIGH || digitalRead(DOWN_PIN) == HIGH) && mode == true){
       mode = false;
-      delay(50);
+      delay(200);
     }
   }
   if(digitalRead(OK_PIN) == HIGH){
@@ -493,13 +499,13 @@ void manual(){
 //Press OK to confirm
 void stepMash(){
   while( mash == false){
+  stepCount = constrain(stepCount, 0,10);
   lcd.clear();
   lcd.noCursor();
   lcd.print("N# Step mash:");
   lcd.setCursor(14,0);
   lcd.print(stepCount);
-  stepUp();
-  stepDown();
+  stepChange();
   if(digitalRead(OK_PIN) == HIGH){
     mash = true;
     delay(500);
@@ -518,6 +524,7 @@ void setMash(){
   while (i<stepCount){
     int bum = 0;
     while( bum == 0) {
+    stepTemperature = constrain(stepTemperature, 0, 100);
     lcd.clear();
     lcd.print("Step N#");
     lcd.setCursor(8,0);
@@ -526,8 +533,7 @@ void setMash(){
     lcd.print("Temp C: ");
     lcd.setCursor(8,1);
     lcd.print(stepTemperature);
-    stepTemp_Up();
-    stepTemp_Down();
+    stepTempChange();
     if(digitalRead(OK_PIN) == HIGH){
       ammostamento[i].temp_step = stepTemperature;
       bum++;
@@ -536,6 +542,7 @@ void setMash(){
     }
   }
   while (bum == 1){
+    stepTime = constrain(stepTime, 0,300);
     lcd.clear();
     lcd.print("Step N#");
     lcd.setCursor(8,0);
@@ -544,8 +551,7 @@ void setMash(){
     lcd.print("Time MIN:");
     lcd.setCursor(10,1);
     lcd.print(stepTime);
-    stepTime_Up();
-    stepTime_Down();
+    stepTimeChange();
     if(digitalRead(OK_PIN) == HIGH){
       ammostamento[i].time_step = stepTime;
       i++;
@@ -559,12 +565,12 @@ void setMash(){
 //Counts how many hop jetty during boil fase
 void hopJetty(){
   while( hop == false){
+  hopCount = constrain(hopCount,0,10);
   lcd.clear();
   lcd.print("N# Hop jetty:");
   lcd.setCursor(14,0);
   lcd.print(hopCount);
-  hopUp();
-  hopDown();
+  hopChange();
   if(digitalRead(OK_PIN) == HIGH){
     hop = true;
     delay(500);
@@ -575,12 +581,12 @@ void hopJetty(){
 
 void boilTime(){
   while ( boil == false){
+    boilCount = constrain(boilCount,0,300);
     lcd.clear();
     lcd.print("Boil minutes:");
     lcd.setCursor(13,0);
     lcd.print(boilCount);
-    boilUp();
-    boilDown();
+    boilChange();
     if (digitalRead(OK_PIN) == HIGH){
       boil = true;
       delay(500);
@@ -589,163 +595,101 @@ void boilTime(){
   }
 }
 
-void whirlpoolTime(){
-  while( whirlpool == false){
+void hopstandTime(){
+  while( hopstand == false){
+    hopstandCount = constrain(hopstandCount,0,60);
     lcd.clear();
-    lcd.print("Whirlpool min:");
+    lcd.print("Hopstand min:");
     lcd.setCursor(14,0);
-    lcd.print(whirlpoolCount);
-    whirlpoolUp();
-    whirlpoolDown();
+    lcd.print(hopstandCount);
+    hopstandChange();
     if(digitalRead(OK_PIN) == HIGH){
-      whirlpool = true;
+      hopstand = true;
       delay(500);
       break;
     }
   }
 }
 
-void hopUp(){
+void hopChange(){
   if(digitalRead(UP_PIN) == HIGH){
     hopCount++;
-    lcd.setCursor(14,0);
-    lcd.print(hopCount);
   }
-  delay(50);
-}
-
-void hopDown(){
   if(digitalRead(DOWN_PIN) == HIGH){
     hopCount--;
-    lcd.setCursor(14,0);
-    lcd.print(hopCount);
   }
-  delay(50); 
+  delay(100); 
 }
 
-
-void stepUp(){
-  if(digitalRead(UP_PIN) == HIGH){
+void stepChange(){
+   if(digitalRead(UP_PIN) == HIGH){
     stepCount++;
-    lcd.setCursor(14,0);
-    lcd.print(stepCount);
   }
-  delay(50);
-}
-
-void stepDown(){
   if(digitalRead(DOWN_PIN) == HIGH){
     stepCount--;
-    lcd.setCursor(14,0);
-    lcd.print(stepCount);
   }
-  delay(50); 
+  delay(100); 
 }
 
-void boilUp(){
+void boilChange(){
   if(digitalRead(UP_PIN) == HIGH){
     boilCount++;
-    lcd.setCursor(13,0);
-    lcd.print(boilCount);
   }
-  delay(50);
-}
-
-void boilDown(){
   if(digitalRead(DOWN_PIN) == HIGH){
     boilCount--;
-    lcd.setCursor(13,0);
-    lcd.print(boilCount);
   }
-  delay(50); 
-} 
+  delay(100); 
+}
 
-
-void whirlpoolUp(){
+void hopstandChange(){
   if(digitalRead(UP_PIN) == HIGH){
-    whirlpoolCount++;
-    lcd.setCursor(14,0);
-    lcd.print(whirlpoolCount);
+    hopstandCount++;
   }
-  delay(50);
-}
-
-void whirlpoolDown(){
   if(digitalRead(DOWN_PIN) == HIGH){
-    whirlpoolCount--;
-    lcd.setCursor(14,0);
-    lcd.print(whirlpoolCount);
+    hopstandCount--;
   }
-  delay(50); 
+  delay(100); 
 }
 
-void tempM_Up(){
+void tempMChange(){
   if(digitalRead(UP_PIN) == HIGH){
     manualSetPoint = manualSetPoint + 0.5;
   }
-  delay(50);
-}
-
-void tempM_Down(){
-  if(digitalRead(DOWN_PIN) == HIGH){
+ if(digitalRead(DOWN_PIN) == HIGH){
     manualSetPoint = manualSetPoint - 0.5;
   }
-  delay(50); 
+  delay(100); 
 }
 
-void stepTemp_Up(){
+void stepTempChange(){
   if(digitalRead(UP_PIN) == HIGH){
     stepTemperature = stepTemperature + 0.5;
-    lcd.setCursor(8,1);
-    lcd.print(stepTemperature);
   }
-  delay(50);
-}
-
-void stepTemp_Down(){
   if(digitalRead(DOWN_PIN) == HIGH){
     stepTemperature = stepTemperature - 0.5;
-    lcd.setCursor(8,1);
-    lcd.print(stepTemperature);
   }
-  delay(50); 
+  delay(100); 
 }
 
-void stepTime_Up(){
+void stepTimeChange(){
   if(digitalRead(UP_PIN) == HIGH){
     stepTime++;
-    lcd.setCursor(10,1);
-    lcd.print(stepTime);
   }
-  delay(50);
-}
-
-void stepTime_Down(){
   if(digitalRead(DOWN_PIN) == HIGH){
     stepTime--;
-    lcd.setCursor(10,1);
-    lcd.print(stepTime);
   }
-  delay(50); 
+  delay(100); 
 }
-
-void hopTime_Up(){
+void hopTimeChange(){
   if(digitalRead(UP_PIN) == HIGH){
     hopTime++;
-    lcd.setCursor(6,1);
-    lcd.print(hopTime);
   }
-  delay(50);
-}
-
-void hopTime_Down(){
   if(digitalRead(DOWN_PIN) == HIGH){
     hopTime--;
-    lcd.setCursor(6,1);
-    lcd.print(hopTime);
   }
-  delay(50); 
+  delay(100); 
 }
+
 
 void start(){
   lcd.clear();
@@ -757,16 +701,16 @@ void start(){
 
 
 void timerBoil(){ 
-  int i = 1;
+  int i = 0;
   lcd.clear();
   int minutes = boilCount-1;
   while (minutes >= 0){
     digitalWrite(SSR_PIN, HIGH);
     if( (minutes == arrayHopTime[i]-1) || arrayHopTime[i] == boilCount ){
       lcd.setCursor(0,1);
-      lcd.print("HOPS IN    N#");
-      lcd.setCursor(13,1);
-      lcd.print(i);
+      lcd.print("HOPS IN     N#");
+      lcd.setCursor(14,1);
+      lcd.print(i+1);
       tone(BUZZER_PIN, 2000, 10000);
       delay(5000);
       i++;
@@ -817,19 +761,19 @@ delay(5000);
 
 void jetty(){
   lcd.clear();
-  int i = 1; 
+  int i = 0; 
   
   while(i <= hopCount){
+    hopTime = constrain(hopTime, 0,boilCount);
     lcd.clear();
-    lcd.print("Jetty #N");
+    lcd.print("Jetty N#");
     lcd.setCursor(8,0);
-    lcd.print(i);
+    lcd.print(i+1);
     lcd.setCursor(0,1);
     lcd.print("Time : ");
     lcd.setCursor(6,1);
     lcd.print(hopTime);
-    hopTime_Up();
-    hopTime_Down();
+    hopTimeChange();
     if(digitalRead(OK_PIN) == HIGH){
       arrayHopTime[i] = hopTime;
       i++;
@@ -840,9 +784,9 @@ void jetty(){
 }
 
 
-void whirlpoolFase(){
+void hopstandFase(){
   lcd.clear();
-  if(whirlpoolCount != 0){
+  if(hopstandCount != 0){
   while(validateHopstand == false){
     lcd.setCursor(0,0);
     lcd.print("Press OK to");
@@ -856,16 +800,17 @@ void whirlpoolFase(){
   lcd.print("Hop stand    ");
   lcd.setCursor(0,1);
   lcd.print("Time     ");
-  whirlpool_CountDown();
+  hopstand_CountDown();
 }
   else
-    brewdayEnd();
+    coolingStep();
+    //brewdayEnd();
 }
 
 
-void whirlpool_CountDown(){
+void hopstand_CountDown(){
   //lcd.clear();
-  int minutes = whirlpoolCount-1;
+  int minutes = hopstandCount-1;
   while (minutes >= 0){
     int seconds = 59;
     if (minutes>=10){
@@ -898,7 +843,29 @@ void whirlpool_CountDown(){
   minutes--; 
   
 }
-brewdayEnd();
+coolingStep();
+//brewdayEnd();
+}
+
+void coolingStep(){
+  if(immersionChiller == true){
+    bool finished = false;
+    while(finished == false){
+    sensors.requestTemperatures();
+    double actualTemp = sensors.getTempC(thermometerAddress);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Chilling wort");
+    lcd.setCursor(0,1);
+    lcd.print("T:");
+    lcd.setCursor(2,1);
+    lcd.print(actualTemp);
+    lcd.setCursor(8,1);
+    lcd.print("°C");
+    }
+  }
+  else
+    brewdayEnd();
 }
 
 void brewdayEnd(){
@@ -910,4 +877,5 @@ void brewdayEnd(){
     lcd.setCursor(0,1);
     lcd.print("    IS OVER      ");
   }
+
 }
