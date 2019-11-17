@@ -1,29 +1,29 @@
-# Beerboy - *Homebrewing Automation* 
+# Beerboy - *Homebrewing Automation*
 Beerboy is an `Arduino` based open source brewing controller for homebrewers.
 <img src= "https://github.com/albeerto-dev/Beerboy/blob/master/Logo_Beerboy_X.png" align="right" />
 
 
 ## Functionalities
 
-It's for a single Input / single Output system.  It's perfect for 
-BIAB systems. "Beerboy" can be used also for classic ALL GRAIN just by 
-swapping the plug of the heating element of the mash kettle 
+It's for a single Input / single Output system.  It's perfect for
+BIAB systems. "Beerboy" can be used also for classic ALL GRAIN just by
+swapping the plug of the heating element of the mash kettle
 with the one of the boil kettle (you'll also need to move the
-temp probe in the boil kettle). If your AG system has a sparge kettle/pot 
+temp probe in the boil kettle). If your AG system has a sparge kettle/pot
 this controller can't manage it.
 
 It can be used in two `modes`:
 * __AUTO__
 * __MANUAL__
 #### AUTO
-Everything is set before the start of the brewday. The mash temperature is controlled by 
+Everything is set before the start of the brewday. The mash temperature is controlled by
 a `PID algorithm`.
-In sequence you can set up : 
-1. Number of mash steps 
-2. Temperature and time in minutes of each step of the mash 
-3. Boil duration in minutes 
-4. Number of hop jetty 
-5. Time of each hop jetty 
+In sequence you can set up :
+1. Number of mash steps
+2. Temperature and time in minutes of each step of the mash
+3. Boil duration in minutes
+4. Number of hop jetty
+5. Time of each hop jetty
 6. Hopstand duration in minutes.
 
 With auto mode it's also possible to choose your chilling method. If an `IMMERSION CHILLER` is used, a piece of code needs to be changed. Doing this the wort temperature is going to be printed during the chilling phase.
@@ -31,7 +31,7 @@ With auto mode it's also possible to choose your chilling method. If an `IMMERSI
  bool immersionChiller = 1;//Set to "1" if you use IMMERSION CHILLER. Set to "0" if others
  ```
 #### MANUAL
-It's like a classic temperature `PID controller`. You can olny set the 
+It's like a classic temperature `PID controller`. You can olny set the
 temperature desired and change it whenever you want.
 ## Hardware components
 * Arduino Uno R3 (or equivalent) x 1
@@ -57,9 +57,9 @@ Fill up the mash tun with the same liters of water usually used for the brew. Se
  4. Repeat steps 2 and 3 until increasing the D gain does not stop the oscillations.
  5. Set P and D to the last stable values.
  6. Increase the I gain until it brings you to the setpoint with the number of oscillations desired (normally zero but a quicker response can be had if you don't mind a couple oscillations of overshoot)
- 
+
  [ *The image has the only scope to show how parameters work and those values are just an example* ]
- 
+
  The piece of code to set:
  ```javascript
  //Specify the links and initial tuning parameters
@@ -71,6 +71,6 @@ That's the precise scheme. AC Input should be your main plug. AC Output should b
 ## Video demonstration
 work in progress / coming soon
 ## Version
-V 1.0
+V 1.1
 ## About
 `Beerboy` is a brewing controller developed by `Alberto M. Ramagini`.

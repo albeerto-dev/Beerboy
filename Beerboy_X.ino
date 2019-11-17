@@ -56,9 +56,8 @@ double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
 double Kp=1, Ki=0, Kd=0;
-//Set to "1" if you use IMMERSION CHILLER
-//Set to "0" if others
-bool immersionChiller = 1;
+
+bool immersionChiller = 1;//Set to "1" if you use IMMERSION CHILLER. Set to "0" if others
 //Values to change finished
 
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
