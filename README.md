@@ -71,6 +71,6 @@ That's the precise scheme. AC Input should be your main plug. AC Output should b
 ## Video demonstration
 work in progress / coming soon
 ## Version
-V 1.0
+V 1.0.1
 ## About
 `Beerboy` is a brewing controller developed by `Alberto M. Ramagini`.
