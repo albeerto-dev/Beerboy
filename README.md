@@ -26,6 +26,10 @@ In sequence you can set up :
 5. Time of each hop jetty 
 6. Hopstand duration in minutes.
 
+With auto mode it's also possible to choose your chilling method. If an `IMMERSION CHILLER` is used, a piece of code needs to be changed. Doing this the wort temperature is going to be printed during the chilling phase.
+ ```
+ bool immersionChiller = 1;//Set to "1" if you use IMMERSION CHILLER. Set to "0" if others
+ ```
 #### MANUAL
 It's like a classic temperature `PID controller`. You can olny set the 
 temperature desired and change it whenever you want.
@@ -55,6 +59,12 @@ Fill up the mash tun with the same liters of water usually used for the brew. Se
  6. Increase the I gain until it brings you to the setpoint with the number of oscillations desired (normally zero but a quicker response can be had if you don't mind a couple oscillations of overshoot)
  
  [ *The image has the only scope to show how parameters work and those values are just an example* ]
+ 
+ The piece of code to set:
+ ```
+ //Specify the links and initial tuning parameters
+double Kp=1, Ki=0, Kd=0;
+ ```
 ## Wiring instructions
 That's the precise scheme. AC Input should be your main plug. AC Output should be your heating element.
 ![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy_Scheme.png)
