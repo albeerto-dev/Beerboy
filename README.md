@@ -43,6 +43,8 @@ temperature desired and change it whenever you want.
 * Resistor 4.700 Ohm x 1 [DS18B20]
 * SSR 25A / 40A x 1
 ## Tuning parameters
+<img src= "https://github.com/albeerto-dev/Beerboy/blob/master/PID_tuning.gif" align="right" />
+
 Before the first brew with this controller it's necessary to tune the 3 parameters of the `PID controller : KI , KD, KP`.
 Fill up the mash tun with the same liters of water usually used for the brew. Select MANUAL MODE on the controller and while the arduino board is connected to your PC and the Serial monitor is opend set new tuning parameters following these steps:
  1. Set all gains to zero except KP.
@@ -51,6 +53,8 @@ Fill up the mash tun with the same liters of water usually used for the brew. Se
  4. Repeat steps 2 and 3 until increasing the D gain does not stop the oscillations.
  5. Set P and D to the last stable values.
  6. Increase the I gain until it brings you to the setpoint with the number of oscillations desired (normally zero but a quicker response can be had if you don't mind a couple oscillations of overshoot)
+ 
+ [ *The image has the only scope to show how parameters work and those values are just an example* ]
 ## Wiring instructions
 That's the precise scheme. AC Input should be your main plug. AC Output should be your heating element.
 ![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy_Scheme.png)
