@@ -1,7 +1,6 @@
-# Beerboy - *Homebrewing Automation*
-Beerboy is an `Arduino` based open source brewing controller for homebrewers.
-<img src= "https://github.com/albeerto-dev/Beerboy/blob/master/Logo_Beerboy_X.png" align="right" />
+# Beerboy - *Homebrewing Automation* <img src= "https://github.com/albeerto-dev/Beerboy/blob/master/Logo_Beerboy_X.png" align="right" />
 
+Beerboy is an `Arduino` based open source brewing controller for homebrewers.
 
 ## Functionalities
 
@@ -9,7 +8,7 @@ It's for a single Input / single Output system.  It's perfect for
 BIAB systems. "Beerboy" can be used also for classic ALL GRAIN just by
 swapping the plug of the heating element of the mash kettle
 with the one of the boil kettle (you'll also need to move the
-temp probe in the boil kettle). If your AG system has a sparge kettle/pot
+temperature probe in the boil kettle). If your AG system has a sparge kettle/pot
 this controller can't manage it.
 
 It can be used in two `modes`:
@@ -46,10 +45,10 @@ temperature desired and change it whenever you want.
 * Resistor 100 Ohm x 1 [buzzer]
 * Resistor 4.700 Ohm x 1 [DS18B20]
 * SSR 25A / 40A x 1
-## Tuning parameters
+## Tuning PID parameters
 <img src= "https://github.com/albeerto-dev/Beerboy/blob/master/PID_tuning.gif" align="right" />
 
-Before the first brew with this controller it's necessary to tune the 3 parameters of the `PID controller : KI , KD, KP`.
+Before the first batch with this controller it's necessary to tune the 3 parameters of the `PID controller : KI , KD, KP`.
 Fill up the mash tun with the same liters of water usually used for the brew. Select MANUAL MODE on the controller and while the arduino board is connected to your PC and the Serial monitor is opend set new tuning parameters following these steps:
  1. Set all gains to zero except KP.
  2. Increase the P gain until the response to a disturbance is steady oscillation.
@@ -74,3 +73,6 @@ work in progress / coming soon
 V 1.0.1
 ## About
 `Beerboy` is a brewing controller developed by `Alberto M. Ramagini`.
+
+* E-mail : alberto.ramagini@gmail.com
+* PayPal : www.paypal.me/albertoramagini
