@@ -39,11 +39,11 @@ temperature desired and change it whenever you want.
 * Display LCD 16x2 x 1
 * Temperature probe DS18B20 x 1
 * Wires
-* Resistor 10.000 Ohm x 3 [buttons]
-* Resistor 2.000 Ohm x 1 [LCD frontlight]
-* Resistor 220 Ohm x 1 [LCD backlight]
+* Resistor 10 kOhm x 3 [buttons] - PIN 8 9 10
+* Resistor 2 kOhm x 1 [LCD frontlight] - PIN v0
+* Resistor 220 Ohm x 1 [LCD backlight] - PIN A
 * Resistor 100 Ohm x 1 [buzzer]
-* Resistor 4.700 Ohm x 1 [DS18B20]
+* Resistor 4k7 Ohm x 1 [DS18B20] - PIN 13
 * SSR 25A / 40A x 1
 ## Tuning PID parameters
 <img src= "https://github.com/albeerto-dev/Beerboy/blob/master/PID_tuning.gif" align="right" />
