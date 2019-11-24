@@ -130,13 +130,19 @@ void setup() {
 
   //LCD inizialization 
   lcd.begin(16,2);
+  tone(BUZZER_PIN, 1000,5000);
   lcd.print("    BEERBOY");
   lcd.setCursor(0,1);
-  lcd.print(" by A. Ramagini");
+  lcd.print(" HB  Automation");
   delay(4000);
   lcd.clear();
-  lcd.print("     Version ");
-  lcd.setCursor(7,1);
+  lcd.print("  by Alberto M.");
+  lcd.setCursor(0,1);
+  lcd.print("    Ramagini");
+  delay(2000);
+  lcd.clear();
+  lcd.print("    Version ");
+  lcd.setCursor(6,1);
   lcd.print("1.0");
   //tone(BUZZER_PIN, 2000,5000);
   delay(2000);
@@ -171,7 +177,7 @@ void loop() {
 /*This is the most complex function. It calculates both the time and the PID
  values to have the correct Output. Every seconds the PID values are 
  calculated and the delay to calculate and display each second is only 
- 250ms beacause after a deep analysis i can say that the compute_Values() 
+ 240ms beacause after a deep analysis i can say that the compute_Values() 
  function has a duration of 750ms circa. In a 1 hour test the timer lost
  only 1 sec. For our purpose it's ok.
  */ 
@@ -208,7 +214,7 @@ int timer_Mash(int tempo){
         if(seconds>=10){
           lcd.setCursor(14,1);
           lcd.print(seconds);
-          delay(250);
+          delay(240);
           
         }
           if(seconds<10){
@@ -216,7 +222,7 @@ int timer_Mash(int tempo){
           lcd.print("0");
           lcd.setCursor(15,1);
           lcd.print(seconds);
-          delay(250);
+          delay(240);
          
     }   
     printLCD_Mash(index); //the display function is called to print on the LCD
@@ -312,7 +318,7 @@ void readyToBrew(){
       compute_Values();
       printLCD_Mash(index);
       if( (Input+1 >= Setpoint)) { //if the Input is near to setpoint insert grains
-        tone(BUZZER_PIN, 2000, 3000);
+        tone(BUZZER_PIN, 2000, 5000);
         while (validateGrain == false){
          lcd.setCursor(0,0);
          lcd.print("Insert GRAINS   ");
@@ -320,18 +326,26 @@ void readyToBrew(){
          lcd.print("Press OK to mash");
             if(digitalRead(OK_PIN) == HIGH){ //after grains IN press ok to star MASH
                lcd.clear();
+               tone(BUZZER_PIN, 2000, 5000);
                timer_Mash(ammostamento[index].time_step);
+               tone(BUZZER_PIN, 2000, 5000);
                validateGrain = true;
                index++;
           }
         }
       }
-    } 
-    if( (Input+1 >= Setpoint)) { //if the Input is near to setpoint alarm and start count
-        tone(BUZZER_PIN, 2000, 3000);
-        timer_Mash(ammostamento[index].time_step);
-        index++;
     }
+    if(index > 0){
+      Setpoint = ammostamento[index].temp_step; //Setpoint of the specific step
+      compute_Values();
+      printLCD_Mash(index);
+        if( (Input+1 >= Setpoint)) { //if the Input is near to setpoint alarm and start count
+        tone(BUZZER_PIN, 2000, 5000);
+        timer_Mash(ammostamento[index].time_step);
+        tone(BUZZER_PIN, 2000, 5000);
+        index++;
+        }
+     }
       if( index == stepCount){//mash is over if BIAB remove grainbag. If AG start sparge
         while(validateMash == false ){
           Setpoint = ammostamento[index-1].temp_step;
@@ -341,6 +355,7 @@ void readyToBrew(){
           lcd.setCursor(0,1);
           lcd.print("Press OK to boil");
             if(digitalRead(OK_PIN) == HIGH){ //press after sparge to start the boil fase
+              tone(BUZZER_PIN, 2000, 5000);
               validateMash = true;
             }
         }
@@ -424,7 +439,7 @@ void boilFase(){
     lcd.setCursor(5,1);
     lcd.print(actual_T);
     
-    while(actual_T > 96){ //boil is near press OK to start the countdown
+    while(actual_T > 25){ //boil is near press OK to start the countdown
       lcd.setCursor(0,0);
       lcd.print("OK to start BOIL");
       tone(BUZZER_PIN,5000, 5000);
@@ -711,13 +726,13 @@ void timerBoil(){
       lcd.setCursor(14,1);
       lcd.print(i+1);
       tone(BUZZER_PIN, 2000, 10000);
-      delay(5000);
+      //delay(5000);
       i++;
   }
     lcd.setCursor(0,0);
     lcd.print("Countdown");
     lcd.setCursor(0,1);
-    lcd.print("Wort boiling");
+    lcd.print("Boiling");
     int seconds = 59;
     if (minutes>=10){
     lcd.setCursor(10,0);
@@ -762,7 +777,7 @@ void jetty(){
   lcd.clear();
   int i = 0; 
   
-  while(i = hopCount){
+  while(i < hopCount){
     hopTime = constrain(hopTime, 0,boilCount);
     lcd.clear();
     lcd.print("Jetty N#");
@@ -876,5 +891,4 @@ void brewdayEnd(){
     lcd.setCursor(0,1);
     lcd.print("    IS OVER      ");
   }
-
 }
