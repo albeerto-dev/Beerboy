@@ -143,7 +143,7 @@ void setup() {
   lcd.clear();
   lcd.print("    Version ");
   lcd.setCursor(6,1);
-  lcd.print("1.0");
+  lcd.print("1.0.1");
   //tone(BUZZER_PIN, 2000,5000);
   delay(2000);
 }
@@ -439,7 +439,7 @@ void boilFase(){
     lcd.setCursor(5,1);
     lcd.print(actual_T);
     
-    while(actual_T > 25){ //boil is near press OK to start the countdown
+    while(actual_T > 96){ //boil is near press OK to start the countdown
       lcd.setCursor(0,0);
       lcd.print("OK to start BOIL");
       tone(BUZZER_PIN,5000, 5000);
