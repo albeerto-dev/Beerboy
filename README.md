@@ -14,16 +14,20 @@ this controller can't manage it.
 It can be used in two `modes`:
 * __AUTO__
 * __MANUAL__
+* __PID__ or __ON/OFF__
 #### AUTO
 Everything is set before the start of the brewday. The mash temperature is controlled by
 a `PID algorithm`.
 In sequence you can set up :
 1. Number of mash steps
-2. Temperature and time in minutes of each step of the mash
-3. Boil duration in minutes
-4. Number of hop jetty
-5. Time of each hop jetty
-6. Hopstand duration in minutes.
+2. Temperature in °C and time in minutes of each step of the mash
+3. Sparge time in minutes
+4. Boil duration in minutes
+5. Number of hop jetty
+6. Time of each hop jetty
+7. Hopstand duration in minutes
+8. Hopstand temperature in °C
+9. Pitching temperature
 
 With auto mode it's also possible to choose your chilling method. If an `IMMERSION CHILLER` is used, a piece of code needs to be changed. Doing this the wort temperature is going to be printed during the chilling phase.
  ```javascript
@@ -32,6 +36,9 @@ With auto mode it's also possible to choose your chilling method. If an `IMMERSI
 #### MANUAL
 It's like a classic temperature `PID controller`. You can olny set the
 temperature desired and change it whenever you want.
+
+#### PID or ON/Off
+This option can change the heating algorithm. You can decide to use a PID algorithm or a classic ON/OFF algorithm to pilot the SSR.
 ## Hardware components
 * Arduino Uno R3 (or equivalent) x 1
 * Buzzer x 1
@@ -45,6 +52,7 @@ temperature desired and change it whenever you want.
 * Resistor 100 Ohm x 1 [buzzer] - PIN Ground (-)
 * Resistor 4.7 kOhm x 1 [DS18B20] - PIN 13
 * SSR 25A / 40A x 1
+* Relay 12V x 1
 ## Tuning PID parameters
 <img src= "https://github.com/albeerto-dev/Beerboy/blob/master/PID_tuning.gif" align="right" />
 
@@ -66,11 +74,12 @@ double Kp=1, Ki=0, Kd=0;
  ```
 ## Wiring instructions
 That's the precise scheme. AC Input should be your main plug. AC Output should be your heating element.
+This image is incomplete since  V 1.2.1
 ![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy_Scheme.png)
 ## Video demonstration
 work in progress / coming soon
 ## Version
-V 1.0.1
+V 1.2.1
 ## About
 `Beerboy` is a brewing controller developed by `Alberto M. Ramagini`.
 
