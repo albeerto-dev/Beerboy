@@ -76,6 +76,8 @@ double Kp=1, Ki=0, Kd=0;
 That's the precise scheme. AC Input should be your main plug. AC Output should be your heating element.
 This image is incomplete since  V 1.2.1
 ![Image of wiring](https://github.com/albeerto-dev/Beerboy/blob/master/Beerboy_Scheme.png)
+## My setup
+![Image of beerboy](https://github.com/albeerto-dev/Beerboy/blob/master/BEERBOY_LABEL.png)
 ## Video demonstration
 work in progress / coming soon
 ## Version
